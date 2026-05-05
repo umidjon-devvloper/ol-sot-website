@@ -1,4 +1,4 @@
-export type Language = 'uz' | 'ru' | 'en';
+export type Language = "uz" | "ru" | "en";
 
 export interface MultiLangText {
   uz: string;
@@ -11,7 +11,7 @@ export interface User {
   phone: string;
   name: string;
   avatar: string;
-  role: 'user' | 'admin' | 'super_admin';
+  role: "user" | "admin" | "super_admin";
   language: Language;
   notificationSettings: {
     newProducts: boolean;
@@ -44,43 +44,30 @@ export interface ProductImage {
 }
 
 export interface SellerContact {
-  _id: string;
-  name: string;
   phone: string;
-  telegram: string;
-  isDefault: boolean;
-  isActive: boolean;
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
+  telegram?: string;
+}
+
+export interface ProductImage {
+  url: string;
 }
 
 export interface Product {
   _id: string;
-  title: MultiLangText;
-  description: MultiLangText;
-  slug: string;
-  category: Category | string;
-  brand: string;
+  title: string | Record<string, string>; // multilang
+  description?: string | Record<string, string>; // multilang
   price: number;
-  discountPrice: number | null;
-  currency: 'UZS' | 'USD';
+  discountPrice?: number;
+  thumbnail?: string;
   images: ProductImage[];
-  thumbnail: string;
-  condition: 'new' | 'used' | 'refurbished';
-  specifications: Record<string, string>;
-  sellerContact: SellerContact | string | null;
+  brand?: string;
+  condition: "new" | "used" | "refurbished";
   inStock: boolean;
-  quantity: number;
-  tags: string[];
-  favoritesCount: number;
-  status: 'active' | 'inactive' | 'draft' | 'sold';
-  isFeatured: boolean;
-  isNew: boolean;
+  isNew?: boolean;
   isFavorite?: boolean;
-  discountPercent?: number;
-  finalPrice?: number;
-  createdAt: string;
+  favoritesCount: number;
+  specifications?: Map<string, string> | Record<string, string>;
+  sellerContact?: SellerContact;
 }
 
 export interface AuthResponse {
@@ -89,7 +76,7 @@ export interface AuthResponse {
 }
 
 export interface AIMessage {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   recommendedProducts?: Product[];
   timestamp?: number;
