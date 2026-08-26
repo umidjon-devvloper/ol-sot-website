@@ -17,11 +17,11 @@ export function Footer() {
       ],
     },
     {
-      title: t('footer.support'),
+      title: t('grades.title'),
       links: [
-        { label: t('footer.help'), href: '/help' },
-        { label: t('footer.delivery'), href: '/delivery' },
-        { label: t('footer.returns'), href: '/returns' },
+        { label: t('grades.title'), href: '/grades' },
+        { label: t('customs.title'), href: '/customs-calculator' },
+        { label: t('serviceFees.title'), href: '/service-fees' },
       ],
     },
     {

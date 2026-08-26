@@ -56,8 +56,9 @@ export function Header() {
   };
 
   const navLinks = [
-    { href: '/', label: t('nav.home') },
-    { href: '/search', label: t('nav.categories') },
+    { href: '/', label: 'Optom' },
+    { href: '/grades', label: t('grades.title') },
+    { href: '/service-fees', label: t('serviceFees.title') },
     { href: '/ai', label: t('nav.ai'), highlight: true },
   ];
 

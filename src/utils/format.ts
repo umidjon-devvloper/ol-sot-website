@@ -3,6 +3,15 @@ export const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
+/**
+ * USD summani 2 xona aniqlikda formatlash: 1234.5 -> "1 234.50"
+ */
+export const formatUsd = (value: number): string => {
+  if (typeof value !== 'number' || isNaN(value)) return '0.00';
+  const [whole, cents] = value.toFixed(2).split('.');
+  return `${whole.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}.${cents}`;
+};
+
 export const formatPhone = (phone: string): string => {
   if (!phone) return '';
   const cleaned = phone.replace(/\D/g, '');

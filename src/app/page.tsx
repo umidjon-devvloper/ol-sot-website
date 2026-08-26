@@ -1,17 +1,9 @@
-import { serverApi } from '../services/apiServer';
-import { HomeContent } from '../components/HomeContent';
+import { OptomHome } from '../components/OptomHome';
 
 /**
- * Home page - Server Component
- *
- * Mahsulotlar va kategoriyalarni server tomonida oladi (SEO + tezkor yuklanish).
- * HomeContent client komponent - interaktiv elementlar uchun.
+ * Home page — Optom (Dubaydan ulgurji) katalogi.
+ * Ma'lumot client tomonda backenddan olinadi.
  */
-export default async function HomePage() {
-  const data = await serverApi.getHomeData();
-
-  return <HomeContent {...data} />;
+export default function HomePage() {
+  return <OptomHome />;
 }
-
-// ISR - har 60 soniyada qayta generatsiya
-export const revalidate = 60;

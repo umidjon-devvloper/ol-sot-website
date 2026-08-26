@@ -6,18 +6,20 @@ import { useQuery } from '@tanstack/react-query';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 
 import { productApi } from '../services/marketplaceApi';
-import { Category } from '../types';
+import { Category, ProductGrade } from '../types';
 import { ProductCard } from './product/ProductCard';
 import { ProductCardSkeleton, EmptyState } from './ui';
 import { useT } from '../hooks/useT';
 import { getML } from '../utils/format';
 import { Button } from './ui/Button';
 import { cn } from '../lib/cn';
+import { GRADES } from '../lib/grades';
 
 interface SearchContentProps {
   initialParams: {
     q?: string;
     category?: string;
+    grade?: string;
     sort?: string;
     minPrice?: string;
     maxPrice?: string;
@@ -32,6 +34,9 @@ export function SearchContent({ initialParams, categories }: SearchContentProps)
 
   const [query, setQuery] = useState(initialParams.q || '');
   const [category, setCategory] = useState(initialParams.category || '');
+  const [grade, setGrade] = useState<ProductGrade | ''>(
+    (initialParams.grade as ProductGrade) || ''
+  );
   const [sort, setSort] = useState(initialParams.sort || 'newest');
   const [minPrice, setMinPrice] = useState(initialParams.minPrice || '');
   const [maxPrice, setMaxPrice] = useState(initialParams.maxPrice || '');
@@ -39,11 +44,12 @@ export function SearchContent({ initialParams, categories }: SearchContentProps)
   const [page, setPage] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['products', { query, category, sort, minPrice, maxPrice, page, featured: initialParams.featured }],
+    queryKey: ['products', { query, category, grade, sort, minPrice, maxPrice, page, featured: initialParams.featured }],
     queryFn: () =>
       productApi.getProducts({
         search: query || undefined,
         category: category || undefined,
+        grade: grade || undefined,
         sort,
         minPrice: minPrice ? Number(minPrice) : undefined,
         maxPrice: maxPrice ? Number(maxPrice) : undefined,
@@ -58,13 +64,14 @@ export function SearchContent({ initialParams, categories }: SearchContentProps)
 
   const resetFilters = () => {
     setCategory('');
+    setGrade('');
     setMinPrice('');
     setMaxPrice('');
     setSort('newest');
     setPage(1);
   };
 
-  const hasActiveFilters = category || minPrice || maxPrice;
+  const hasActiveFilters = category || grade || minPrice || maxPrice;
 
   return (
     <div className="container-page py-8 lg:py-12">
@@ -126,6 +133,52 @@ export function SearchContent({ initialParams, categories }: SearchContentProps)
                 >
                   <X className="w-4 h-4" />
                 </button>
+              </div>
+            </div>
+
+            {/* Grade filter */}
+            <div className="mb-6">
+              <h4 className="text-xs uppercase tracking-wider font-bold text-ink-muted mb-3">
+                {t('grades.title')}
+              </h4>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    setGrade('');
+                    setPage(1);
+                  }}
+                  className={cn(
+                    'px-3 py-2 rounded-lg text-xs font-bold border transition-colors',
+                    grade === ''
+                      ? 'bg-brand-500 text-white border-brand-500'
+                      : 'bg-white dark:bg-[#13131A] border-zinc-200 dark:border-zinc-800 text-ink dark:text-ink-dark hover:border-brand-500'
+                  )}
+                >
+                  {t('common.seeAll')}
+                </button>
+                {GRADES.map((g) => (
+                  <button
+                    key={g.key}
+                    onClick={() => {
+                      setGrade((v) => (v === g.key ? '' : g.key));
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'px-3 py-2 rounded-lg text-xs font-bold border transition-colors flex items-center justify-center gap-1',
+                      grade === g.key
+                        ? 'text-white'
+                        : 'bg-white dark:bg-[#13131A] border-zinc-200 dark:border-zinc-800 text-ink dark:text-ink-dark hover:opacity-80'
+                    )}
+                    style={
+                      grade === g.key
+                        ? { backgroundColor: g.color, borderColor: g.color }
+                        : undefined
+                    }
+                  >
+                    <span>{g.emoji}</span>
+                    {g.code}
+                  </button>
+                ))}
               </div>
             </div>
 

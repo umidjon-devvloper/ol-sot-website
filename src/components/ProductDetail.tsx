@@ -23,6 +23,7 @@ import { ProductCard } from "./product/ProductCard";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui";
 import { cn } from "../lib/cn";
+import { getGradeInfo } from "../lib/grades";
 
 interface ProductDetailProps {
   product: Product;
@@ -193,6 +194,20 @@ export function ProductDetail({ product, similar }: ProductDetailProps) {
             <Badge variant="success">
               {conditionLabels[product.condition]}
             </Badge>
+            {(() => {
+              const g = getGradeInfo(product.grade);
+              if (!g) return null;
+              return (
+                <Link
+                  href="/grades"
+                  className="px-2.5 py-1 rounded-md text-white text-xs font-bold inline-flex items-center gap-1"
+                  style={{ backgroundColor: g.color }}
+                >
+                  <span>{g.emoji}</span>
+                  {g.code}
+                </Link>
+              );
+            })()}
           </div>
 
           {/* Title */}

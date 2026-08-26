@@ -1,5 +1,7 @@
 export type Language = "uz" | "ru" | "en";
 
+export type ProductGrade = "s_plus" | "s1" | "cpo" | "as_is";
+
 export interface MultiLangText {
   uz: string;
   ru: string;
@@ -62,6 +64,7 @@ export interface Product {
   images: ProductImage[];
   brand?: string;
   condition: "new" | "used" | "refurbished";
+  grade?: ProductGrade;
   inStock: boolean;
   isNew?: boolean;
   isFavorite?: boolean;
@@ -87,4 +90,32 @@ export interface Pagination {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+// ============================================================
+// Optom (Dubaydan ulgurji)
+// ============================================================
+export interface WholesaleOffer {
+  condition: string;
+  variant: string;
+  priceUSD: number;
+}
+
+export interface WholesaleProduct {
+  _id: string;
+  name: string;
+  brand: string;
+  note: string;
+  priceUSD: number | null;
+  offers: WholesaleOffer[];
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface WholesaleSettings {
+  customsPercent: number;
+  imeiUSD: number;
+  cargoUSD: number;
+  usdToUzs: number;
 }

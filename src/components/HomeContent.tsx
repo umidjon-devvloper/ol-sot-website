@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ChevronRight, Zap, Shield, Truck } from 'lucide-react';
+import { ArrowRight, Sparkles, ChevronRight, Zap, Shield, Truck, Award, Calculator, Wallet } from 'lucide-react';
 
 import { Product, Category } from '../types';
 import { ProductCard } from './product/ProductCard';
 import { useT } from '../hooks/useT';
 import { getML } from '../utils/format';
 import { ProductCardSkeleton } from './ui';
+import { GRADES } from '../lib/grades';
+import { HeroShowcase } from './HeroShowcase';
 
 interface HomeContentProps {
   featured: Product[];
@@ -63,74 +65,8 @@ export function HomeContent({ featured, newest, categories }: HomeContentProps) 
               </div>
             </div>
 
-            {/* Hero visual - 3D iPhones stacked */}
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square">
-                {/* iPhone 1 - Back, slightly offset */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-[520px] -rotate-12 translate-x-20 animate-float">
-                  {/* Phone body */}
-                  <div className="relative w-full h-full rounded-[2.8rem] bg-gradient-to-b from-gray-800 via-gray-700 to-gray-800 shadow-2xl shadow-purple-500/30 border-4 border-gray-600 overflow-hidden">
-                    {/* Screen */}
-                    <div className="absolute inset-2.5 rounded-[2.3rem] bg-gradient-to-br from-purple-600 via-pink-500 to-brand-500 overflow-hidden">
-                      {/* Screen content */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-5">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
-                          <Zap className="w-8 h-8" />
-                        </div>
-                        <div className="text-xl font-black text-center">iPhone 15</div>
-                        <div className="text-xs mt-2 opacity-90">Dynamic Island</div>
-                      </div>
-                      {/* Glare */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" />
-                    </div>
-                    {/* Dynamic Island */}
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-full" />
-                    {/* Side buttons */}
-                    <div className="absolute -right-1 top-28 w-1 h-14 bg-gray-500 rounded-r" />
-                    <div className="absolute -right-1 top-44 w-1 h-10 bg-gray-500 rounded-r" />
-                    <div className="absolute -left-1 top-36 w-1 h-16 bg-gray-500 rounded-l" />
-                  </div>
-                  {/* Shadow */}
-                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-6 bg-black/20 rounded-full blur-xl" />
-                </div>
-
-                {/* iPhone 2 - Front, centered */}
-                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-[450px] rotate-3 animate-float-delayed">
-                  {/* Phone body */}
-                  <div className="relative w-full h-full rounded-[2.8rem] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 shadow-2xl shadow-brand-500/50 border-4 border-gray-700 overflow-hidden">
-                    {/* Screen */}
-                    <div className="absolute inset-2.5 rounded-[2.3rem] bg-gradient-to-br from-brand-400 via-purple-500 to-pink-500 overflow-hidden">
-                      {/* Screen content */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-5">
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
-                          <Sparkles className="w-8 h-8" />
-                        </div>
-                        <div className="text-xl font-black text-center">iPhone 15 Pro</div>
-                        <div className="text-xs mt-2 opacity-90">Titanium Design</div>
-                      </div>
-                      {/* Glare effect */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
-                    </div>
-                    {/* Dynamic Island */}
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-full" />
-                    {/* Side buttons */}
-                    <div className="absolute -right-1 top-28 w-1 h-14 bg-gray-600 rounded-r" />
-                    <div className="absolute -right-1 top-44 w-1 h-10 bg-gray-600 rounded-r" />
-                    <div className="absolute -left-1 top-36 w-1 h-16 bg-gray-600 rounded-l" />
-                  </div>
-                  {/* Shadow */}
-                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-6 bg-black/30 rounded-full blur-xl" />
-                </div>
-
-                {/* Floating elements */}
-                <div className="absolute top-16 left-4/3 -translate-x-1/2 w-14 h-14 rounded-2xl bg-brand-500/30 backdrop-blur-sm animate-bounce-slow flex items-center justify-center">
-                  <Shield className="w-7 h-7 text-white" />
-                </div>
-                <div className="absolute bottom-16 left-3/2 -translate-x-1/2 w-12 h-12 rounded-xl bg-purple-500/30 backdrop-blur-sm animate-bounce-slow-delayed flex items-center justify-center">
-                  <Truck className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </div>
+            {/* Hero visual - haqiqiy mahsulotlar */}
+            <HeroShowcase products={[...featured, ...newest]} />
           </div>
         </div>
       </section>
@@ -161,6 +97,93 @@ export function HomeContent({ featured, newest, categories }: HomeContentProps) 
           </div>
         </section>
       )}
+
+      {/* Grades quick section */}
+      <section className="container-page py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl lg:text-3xl font-black tracking-tight">
+              {t('grades.title')}
+            </h2>
+            <p className="text-sm text-ink-secondary dark:text-ink-dark-secondary mt-1">
+              {t('grades.subtitle')}
+            </p>
+          </div>
+          <Link
+            href="/grades"
+            className="text-sm font-semibold text-brand-500 hover:text-brand-600 inline-flex items-center gap-1"
+          >
+            {t('common.seeAll')} <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+          {GRADES.map((g) => (
+            <Link
+              key={g.key}
+              href={`/search?grade=${g.key}`}
+              className="card p-4 lg:p-5 hover:-translate-y-0.5 transition-transform"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl"
+                  style={{ backgroundColor: `${g.color}22` }}
+                >
+                  {g.emoji}
+                </div>
+                <div>
+                  <div className="text-lg font-black tracking-tight">{g.code}</div>
+                  <div className="text-xs text-neutral-500">
+                    {t(`${g.i18nKey}.badge`)}
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-ink-secondary dark:text-ink-dark-secondary line-clamp-2 leading-relaxed">
+                {t(`${g.i18nKey}.warranty`)}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Info shortcuts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+          <Link
+            href="/customs-calculator"
+            className="card p-6 flex items-center gap-4 hover:-translate-y-0.5 transition-transform"
+          >
+            <div className="w-14 h-14 rounded-xl bg-blue-500/15 text-blue-500 flex items-center justify-center flex-shrink-0">
+              <Calculator className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold text-ink dark:text-ink-dark">
+                {t('customs.title')}
+              </div>
+              <div className="text-sm text-ink-secondary dark:text-ink-dark-secondary mt-0.5">
+                {t('customs.subtitle')}
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-neutral-400" />
+          </Link>
+
+          <Link
+            href="/service-fees"
+            className="card p-6 flex items-center gap-4 hover:-translate-y-0.5 transition-transform"
+          >
+            <div className="w-14 h-14 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center flex-shrink-0">
+              <Wallet className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold text-ink dark:text-ink-dark">
+                {t('serviceFees.title')}
+              </div>
+              <div className="text-sm text-ink-secondary dark:text-ink-dark-secondary mt-0.5">
+                {t('serviceFees.subtitle')}
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-neutral-400" />
+          </Link>
+        </div>
+      </section>
 
       {/* AI Banner */}
       <section className="container-page py-8">

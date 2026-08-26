@@ -5,6 +5,7 @@ interface SearchPageProps {
   searchParams: Promise<{
     q?: string;
     category?: string;
+    grade?: string;
     sort?: string;
     minPrice?: string;
     maxPrice?: string;

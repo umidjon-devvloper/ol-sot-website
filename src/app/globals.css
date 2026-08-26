@@ -123,58 +123,44 @@
     animation: shimmer 2s infinite;
   }
 
-  /* Floating animation for 3D phones */
-  @keyframes float {
+  /*
+   * Hero kartochkalarining sekin suzishi.
+   *
+   * Faqat translateY animatsiya qilinadi va u alohida o'rovchi div'ga
+   * beriladi - burilish (rotate/scale) ichkaridagi elementda qoladi.
+   * Shu tufayli animatsiya Tailwind transformlarini bekor qilmaydi.
+   */
+  @keyframes hero-drift {
     0%, 100% {
-      transform: translate(-50%, -50%) translateY(0px);
+      transform: translateY(0);
     }
     50% {
-      transform: translate(-50%, -50%) translateY(-20px);
+      transform: translateY(-14px);
     }
   }
 
-  @keyframes float-delayed {
-    0%, 100% {
-      transform: rotate(12deg) translateY(0px);
-    }
-    50% {
-      transform: rotate(12deg) translateY(-15px);
-    }
+  .hero-drift {
+    animation: hero-drift 7s ease-in-out infinite;
+    will-change: transform;
   }
 
-  @keyframes bounce-slow {
-    0%, 100% {
-      transform: translateY(0px);
+  .hero-drift-a {
+    animation-duration: 7s;
+  }
+
+  .hero-drift-b {
+    animation-duration: 8.5s;
+    animation-delay: -2s;
+  }
+
+  .hero-drift-c {
+    animation-duration: 9.5s;
+    animation-delay: -4s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-drift {
+      animation: none;
     }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes bounce-slow-delayed {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-float-delayed {
-    animation: float-delayed 6s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-
-  .animate-bounce-slow {
-    animation: bounce-slow 4s ease-in-out infinite;
-  }
-
-  .animate-bounce-slow-delayed {
-    animation: bounce-slow-delayed 4s ease-in-out infinite;
-    animation-delay: 2s;
   }
 }

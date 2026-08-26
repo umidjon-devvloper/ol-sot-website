@@ -12,6 +12,7 @@ import { useAuthStore } from '../../store/authStore';
 import { favoriteApi } from '../../services/marketplaceApi';
 import { formatPrice, getML } from '../../utils/format';
 import { cn } from '../../lib/cn';
+import { getGradeInfo } from '../../lib/grades';
 
 interface ProductCardProps {
   product: Product;
@@ -32,6 +33,7 @@ export function ProductCard({ product, onFavoriteToggle, variant = 'default' }: 
     : 0;
 
   const title = getML(product.title, lang);
+  const gradeInfo = getGradeInfo(product.grade);
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -90,6 +92,16 @@ export function ProductCard({ product, onFavoriteToggle, variant = 'default' }: 
             </span>
           )}
         </div>
+
+        {/* Grade badge */}
+        {gradeInfo && (
+          <span
+            className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-white text-[10px] font-black tracking-wider"
+            style={{ backgroundColor: gradeInfo.color }}
+          >
+            {gradeInfo.code}
+          </span>
+        )}
 
         {/* Favorite */}
         <button

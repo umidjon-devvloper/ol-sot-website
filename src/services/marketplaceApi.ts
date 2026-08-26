@@ -1,7 +1,7 @@
 'use client';
 
 import api from './api';
-import { Product, Category, AuthResponse, User } from '../types';
+import { Product, Category, AuthResponse, User, ProductGrade } from '../types';
 
 interface RegisterData {
   phone: string;
@@ -54,6 +54,7 @@ interface ProductsParams {
   minPrice?: number;
   maxPrice?: number;
   condition?: string;
+  grade?: ProductGrade;
   search?: string;
   sort?: string;
   page?: number;
@@ -103,6 +104,19 @@ export const aiApi = {
     history: Array<{ role: string; content: string }> = []
   ): Promise<{ message: string; recommendedProducts: Product[] }> => {
     const response: any = await api.post('/ai/ask', { message, history });
+    return response.data;
+  },
+};
+
+import type { WholesaleProduct, WholesaleSettings } from '../types';
+
+export const wholesaleApi = {
+  getProducts: async (limit?: number): Promise<{ products: WholesaleProduct[] }> => {
+    const response: any = await api.get('/wholesale/products', { params: limit ? { limit } : {} });
+    return response.data;
+  },
+  getSettings: async (): Promise<{ settings: WholesaleSettings }> => {
+    const response: any = await api.get('/wholesale/settings');
     return response.data;
   },
 };
