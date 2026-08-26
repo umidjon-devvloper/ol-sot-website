@@ -118,4 +118,5 @@ export interface WholesaleSettings {
   imeiUSD: number;
   cargoUSD: number;
   usdToUzs: number;
+  minOrderQty: number;
 }

@@ -34,6 +34,7 @@ const DEFAULT_SETTINGS: WholesaleSettings = {
   imeiUSD: 15,
   cargoUSD: 7,
   usdToUzs: 12600,
+  minOrderQty: 4,
 };
 
 export const computeCost = (

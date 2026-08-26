@@ -195,7 +195,7 @@ export function OptomHome() {
         />
       )}
 
-      {cartOpen && <CartDrawer onClose={() => setCartOpen(false)} />}
+      {cartOpen && <CartDrawer onClose={() => setCartOpen(false)} minOrder={settings?.minOrderQty ?? 1} />}
     </>
   );
 }
@@ -336,7 +336,7 @@ function Row({ label, value, danger }: { label: string; value: string; danger?: 
   );
 }
 
-function CartDrawer({ onClose }: { onClose: () => void }) {
+function CartDrawer({ onClose, minOrder }: { onClose: () => void; minOrder: number }) {
   const router = useRouter();
   const items = useWholesaleCart((s) => s.items);
   const setQuantity = useWholesaleCart((s) => s.setQuantity);
@@ -359,6 +359,10 @@ function CartDrawer({ onClose }: { onClose: () => void }) {
   const [done, setDone] = useState(false);
 
   const handleSubmit = async () => {
+    if (totalQty < minOrder) {
+      alert(`Kamida ${minOrder} ta mahsulot buyurtma qilishingiz kerak. Mahsulotni ko'paytiring.`);
+      return;
+    }
     if (!token || !user) {
       onClose();
       router.push('/login');
@@ -445,6 +449,12 @@ function CartDrawer({ onClose }: { onClose: () => void }) {
               <span className="text-ink-muted">{lines.length} mahsulot · {totalQty} dona</span>
               {totalUSD > 0 && <span className="font-black text-brand-500">~${formatSom(totalUSD)}</span>}
             </div>
+
+            {totalQty < minOrder && (
+              <p className="text-xs text-amber-600 font-semibold mb-3">
+                Kamida {minOrder} ta mahsulot olishingiz kerak
+              </p>
+            )}
 
             {!token && (
               <p className="text-xs text-ink-muted mb-3">Buyurtma yuborish uchun tizimga kiring.</p>
