@@ -120,3 +120,24 @@ export const wholesaleApi = {
     return response.data;
   },
 };
+
+interface WholesaleOrderItem {
+  product?: string;
+  name: string;
+  condition?: string;
+  variant?: string;
+  priceUSD?: number | null;
+  quantity: number;
+}
+
+export const wholesaleOrderApi = {
+  createOrder: async (payload: {
+    items: WholesaleOrderItem[];
+    phone?: string;
+    shopName?: string;
+    note?: string;
+  }): Promise<{ order: any }> => {
+    const response: any = await api.post('/wholesale/orders', payload);
+    return response.data;
+  },
+};

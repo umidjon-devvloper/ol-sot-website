@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Boxes, Search, Tag, Check, X, ArrowRight, Sparkles, ShieldCheck, Truck, Smartphone } from 'lucide-react';
+import { Boxes, Search, Tag, Check, X, ArrowRight, Sparkles, ShieldCheck, Truck, Smartphone, ShoppingCart, Plus, Minus, Trash2, Send } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-import { wholesaleApi } from '../services/marketplaceApi';
+import { wholesaleApi, wholesaleOrderApi } from '../services/marketplaceApi';
+import { useWholesaleCart } from '../store/wholesaleCartStore';
+import { useAuthStore } from '../store/authStore';
 import type { WholesaleProduct, WholesaleSettings, WholesaleOffer } from '../types';
 import { minPriceUSD, sortedOffers, computeCost, formatSom } from '../lib/wholesale';
 
@@ -17,6 +20,16 @@ export function OptomHome() {
   const [search, setSearch] = useState('');
   const [brand, setBrand] = useState<string | null>(null);
   const [selected, setSelected] = useState<WholesaleProduct | null>(null);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const cartItems = useWholesaleCart((s) => s.items);
+  const setLine = useWholesaleCart((s) => s.setLine);
+  const hydrateCart = useWholesaleCart((s) => s.hydrate);
+  const cartCount = Object.values(cartItems).filter((i) => i.quantity > 0).length;
+
+  useEffect(() => {
+    hydrateCart();
+  }, [hydrateCart]);
 
   useEffect(() => {
     (async () => {
@@ -152,9 +165,37 @@ export function OptomHome() {
         )}
       </section>
 
-      {selected && (
-        <DetailModal product={selected} settings={settings} onClose={() => setSelected(null)} />
+      {/* Floating savat tugmasi */}
+      {cartCount > 0 && (
+        <button
+          onClick={() => setCartOpen(true)}
+          className="fixed bottom-6 right-6 z-40 btn-primary btn-lg shadow-2xl rounded-full"
+        >
+          <ShoppingCart className="w-5 h-5" /> Savat
+          <span className="ml-1 min-w-6 h-6 px-1.5 rounded-full bg-white text-brand-600 text-xs font-black flex items-center justify-center">{cartCount}</span>
+        </button>
       )}
+
+      {selected && (
+        <DetailModal
+          product={selected}
+          settings={settings}
+          onClose={() => setSelected(null)}
+          onAdd={(offer, qty) => {
+            setLine(selected._id, {
+              name: selected.name,
+              condition: offer.condition,
+              variant: offer.variant,
+              priceUSD: offer.priceUSD,
+              quantity: qty,
+            });
+            setSelected(null);
+            setCartOpen(true);
+          }}
+        />
+      )}
+
+      {cartOpen && <CartDrawer onClose={() => setCartOpen(false)} />}
     </>
   );
 }
@@ -188,10 +229,12 @@ function DetailModal({
   product,
   settings,
   onClose,
+  onAdd,
 }: {
   product: WholesaleProduct;
   settings: WholesaleSettings | null;
   onClose: () => void;
+  onAdd: (offer: WholesaleOffer, qty: number) => void;
 }) {
   const offers = useMemo(() => sortedOffers(product), [product]);
   const [idx, setIdx] = useState(0);
@@ -273,9 +316,12 @@ function DetailModal({
           <p className="text-sm text-ink-muted mb-4">{qty} × ${formatSom(cost.totalUSD)} ≈ {formatSom(cost.totalUZS * qty)} so'm</p>
         )}
 
-        <a href={TELEGRAM} target="_blank" rel="noreferrer" className="btn-primary btn-lg w-full justify-center">
-          <ArrowRight className="w-4 h-4" /> Buyurtma berish (Telegram)
-        </a>
+        <button
+          onClick={() => offer && onAdd(offer, qty)}
+          className="btn-primary btn-lg w-full justify-center"
+        >
+          <ShoppingCart className="w-4 h-4" /> Savatga qo&apos;shish
+        </button>
       </div>
     </div>
   );
@@ -286,6 +332,142 @@ function Row({ label, value, danger }: { label: string; value: string; danger?: 
     <div className="flex items-center justify-between py-1.5">
       <span className={'text-sm ' + (danger ? 'text-red-500' : 'text-ink-secondary dark:text-ink-dark-secondary')}>{label}</span>
       <span className={'font-semibold ' + (danger ? 'text-red-500' : '')}>{value}</span>
+    </div>
+  );
+}
+
+function CartDrawer({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
+  const items = useWholesaleCart((s) => s.items);
+  const setQuantity = useWholesaleCart((s) => s.setQuantity);
+  const remove = useWholesaleCart((s) => s.remove);
+  const clear = useWholesaleCart((s) => s.clear);
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+
+  const lines = Object.entries(items)
+    .filter(([, v]) => v.quantity > 0)
+    .map(([id, v]) => ({ id, ...v }));
+
+  const totalQty = lines.reduce((s, l) => s + l.quantity, 0);
+  const totalUSD = lines.reduce((s, l) => s + (l.priceUSD || 0) * l.quantity, 0);
+
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [shopName, setShopName] = useState(user?.name || '');
+  const [note, setNote] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!token || !user) {
+      onClose();
+      router.push('/login');
+      return;
+    }
+    if (!phone.trim()) {
+      alert("Telefon raqam kiritilishi shart");
+      return;
+    }
+    if (lines.length === 0) return;
+    setSubmitting(true);
+    try {
+      await wholesaleOrderApi.createOrder({
+        phone: phone.trim(),
+        shopName: shopName.trim(),
+        note: note.trim(),
+        items: lines.map((l) => ({
+          product: l.id,
+          name: l.name,
+          condition: l.condition,
+          variant: l.variant,
+          priceUSD: l.priceUSD,
+          quantity: l.quantity,
+        })),
+      });
+      clear();
+      setDone(true);
+    } catch (e: any) {
+      alert(e?.message || "Xatolik yuz berdi");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex justify-end">
+      <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-md h-full overflow-y-auto bg-white dark:bg-[#13131A] shadow-2xl p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-xl font-black tracking-tight flex items-center gap-2">
+            <ShoppingCart className="w-5 h-5" /> Savat
+          </h3>
+          <button onClick={onClose} className="p-1 text-ink-muted"><X className="w-5 h-5" /></button>
+        </div>
+
+        {done ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8" />
+            </div>
+            <p className="text-lg font-black">Yuborildi ✅</p>
+            <p className="text-sm text-ink-muted mt-1">Buyurtmangiz qabul qilindi. Tez orada bog&apos;lanamiz.</p>
+            <button onClick={onClose} className="btn-primary btn-lg w-full justify-center mt-6">Yopish</button>
+          </div>
+        ) : lines.length === 0 ? (
+          <p className="text-center text-ink-muted py-16">Savat bo&apos;sh</p>
+        ) : (
+          <>
+            <div className="space-y-3 mb-6">
+              {lines.map((l) => (
+                <div key={l.id} className="card p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <p className="font-bold leading-tight">{l.name}</p>
+                      {(l.condition || l.variant) && (
+                        <p className="text-xs text-ink-muted mt-0.5">{[l.condition, l.variant].filter(Boolean).join(' · ')}</p>
+                      )}
+                      {l.priceUSD != null && (
+                        <p className="text-sm font-bold text-brand-500 mt-1">${l.priceUSD} × {l.quantity} = ${formatSom((l.priceUSD || 0) * l.quantity)}</p>
+                      )}
+                    </div>
+                    <button onClick={() => remove(l.id)} className="text-ink-muted hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                  <div className="flex items-center justify-end gap-3 mt-3">
+                    <button onClick={() => setQuantity(l.id, l.quantity - 1)} className="w-8 h-8 rounded-lg bg-ink-muted/10 font-bold"><Minus className="w-4 h-4 mx-auto" /></button>
+                    <span className="font-black w-8 text-center">{l.quantity}</span>
+                    <button onClick={() => setQuantity(l.id, l.quantity + 1)} className="w-8 h-8 rounded-lg bg-brand-500 text-white font-bold"><Plus className="w-4 h-4 mx-auto" /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between text-sm mb-4">
+              <span className="text-ink-muted">{lines.length} mahsulot · {totalQty} dona</span>
+              {totalUSD > 0 && <span className="font-black text-brand-500">~${formatSom(totalUSD)}</span>}
+            </div>
+
+            {!token && (
+              <p className="text-xs text-ink-muted mb-3">Buyurtma yuborish uchun tizimga kiring.</p>
+            )}
+
+            <label className="block text-sm font-semibold mb-1">Telefon raqam *</label>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+998 90 123 45 67"
+              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1C1C24] text-sm mb-3 outline-none focus:border-brand-500" />
+
+            <label className="block text-sm font-semibold mb-1">Magazin nomi</label>
+            <input value={shopName} onChange={(e) => setShopName(e.target.value)} placeholder="Magazin nomi"
+              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1C1C24] text-sm mb-3 outline-none focus:border-brand-500" />
+
+            <label className="block text-sm font-semibold mb-1">Izoh (ixtiyoriy)</label>
+            <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Qo'shimcha ma'lumot..."
+              className="w-full h-20 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1C1C24] text-sm mb-4 outline-none focus:border-brand-500 resize-none" />
+
+            <button onClick={handleSubmit} disabled={submitting} className="btn-primary btn-lg w-full justify-center disabled:opacity-60">
+              <Send className="w-4 h-4" /> {token ? 'Yuborish' : 'Kirish va yuborish'}
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
