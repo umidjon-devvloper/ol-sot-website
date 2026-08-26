@@ -238,7 +238,7 @@ function DetailModal({
 }) {
   const offers = useMemo(() => sortedOffers(product), [product]);
   const [idx, setIdx] = useState(0);
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(10);
   const offer: WholesaleOffer | undefined = offers[idx];
   const cost = computeCost(offer?.priceUSD || 0, settings);
 
@@ -304,15 +304,18 @@ function DetailModal({
         </div>
 
         {/* Miqdor */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="font-bold">Miqdor</span>
+        <div className="flex items-center justify-between mb-1">
+          <div>
+            <span className="font-bold">Miqdor</span>
+            <p className="text-xs text-ink-muted">Minimal buyurtma: 10 dona</p>
+          </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="w-9 h-9 rounded-lg bg-ink-muted/10 font-bold">−</button>
-            <span className="font-black text-lg w-8 text-center">{qty}</span>
+            <button onClick={() => setQty((q) => Math.max(10, q - 1))} className="w-9 h-9 rounded-lg bg-ink-muted/10 font-bold">−</button>
+            <span className="font-black text-lg w-10 text-center">{qty}</span>
             <button onClick={() => setQty((q) => q + 1)} className="w-9 h-9 rounded-lg bg-brand-500 text-white font-bold">+</button>
           </div>
         </div>
-        {qty > 1 && (
+        {qty > 10 && (
           <p className="text-sm text-ink-muted mb-4">{qty} × ${formatSom(cost.totalUSD)} ≈ {formatSom(cost.totalUZS * qty)} so'm</p>
         )}
 
@@ -433,7 +436,7 @@ function CartDrawer({ onClose }: { onClose: () => void }) {
                     <button onClick={() => remove(l.id)} className="text-ink-muted hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                   </div>
                   <div className="flex items-center justify-end gap-3 mt-3">
-                    <button onClick={() => setQuantity(l.id, l.quantity - 1)} className="w-8 h-8 rounded-lg bg-ink-muted/10 font-bold"><Minus className="w-4 h-4 mx-auto" /></button>
+                    <button onClick={() => setQuantity(l.id, Math.max(10, l.quantity - 1))} className="w-8 h-8 rounded-lg bg-ink-muted/10 font-bold"><Minus className="w-4 h-4 mx-auto" /></button>
                     <span className="font-black w-8 text-center">{l.quantity}</span>
                     <button onClick={() => setQuantity(l.id, l.quantity + 1)} className="w-8 h-8 rounded-lg bg-brand-500 text-white font-bold"><Plus className="w-4 h-4 mx-auto" /></button>
                   </div>
