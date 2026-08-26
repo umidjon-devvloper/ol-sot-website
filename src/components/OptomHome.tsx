@@ -291,22 +291,12 @@ function DetailModal({
           <p className="font-black mb-1">Taxminiy yakuniy xarajat</p>
           <p className="text-xs text-ink-muted mb-3">Bojxona + IMEI + Yo'l kira</p>
           <Row label="Qurilma narxi" value={`$${formatSom(cost.device)}`} />
-          {cost.combined ? (
-            <Row label="Rastamojka + IMEI + kargo" value={`$${formatSom(cost.extra)}`} danger />
-          ) : (
-            <>
-              <Row label="Bojxona xarajati" value={`$${formatSom(cost.customs)}`} />
-              <Row label="IMEI xarajati" value={`$${formatSom(cost.imei)}`} />
-              <Row label="Yo'l kira (kargo)" value={`$${formatSom(cost.cargo)}`} />
-              <Row label="Jami xarajatlar" value={`$${formatSom(cost.extra)}`} danger />
-            </>
-          )}
+          <Row label="Rastamojka + IMEI + kargo" value={`$${formatSom(cost.extra)}`} danger />
           <div className="border-t border-zinc-200 dark:border-zinc-800 my-2" />
           <div className="flex items-center justify-between">
             <span className="font-bold text-lg">Jami to'lov</span>
             <span className="font-black text-2xl text-emerald-600">${formatSom(cost.totalUSD)}</span>
           </div>
-          <p className="text-sm font-bold text-emerald-600 mt-1">≈ {formatSom(cost.totalUZS)} so'm</p>
         </div>
 
         {/* Miqdor */}
@@ -319,7 +309,7 @@ function DetailModal({
           </div>
         </div>
         {qty > 1 && (
-          <p className="text-sm text-ink-muted mb-4">{qty} × ${formatSom(cost.totalUSD)} ≈ {formatSom(cost.totalUZS * qty)} so'm</p>
+          <p className="text-sm text-ink-muted mb-4">{qty} × ${formatSom(cost.totalUSD)} = ${formatSom(cost.totalUSD * qty)}</p>
         )}
 
         <button
