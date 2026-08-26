@@ -154,6 +154,7 @@ export default {
     audienceLabel: 'Kim uchun',
     warrantyLabel: 'Kafolat',
     warrantyTitle: 'Kafolat va Sifat Siyosati',
+    warrantyScope: 'Kafolat faqat S+ va S1 kategoriyalariga beriladi.',
     warrantyGuaranteed: 'Kafolatli tekshiruvlar',
     warrantyCamera: 'Kamera va linzalar',
     warrantyMic: 'Mikrofon va kalonka',

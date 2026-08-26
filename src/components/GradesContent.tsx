@@ -101,6 +101,13 @@ export default function GradesContent() {
             </h3>
           </div>
 
+          <div className="rounded-xl bg-brand-500 px-4 py-3 flex items-center gap-2 mb-5">
+            <ShieldCheck className="text-white shrink-0" size={18} />
+            <span className="text-sm font-bold text-white">
+              {t("grades.warrantyScope")}
+            </span>
+          </div>
+
           <p className="text-base font-semibold text-ink dark:text-ink-dark mb-4">
             {t("grades.warrantyGuaranteed")}:
           </p>

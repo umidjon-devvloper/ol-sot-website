@@ -154,6 +154,7 @@ export default {
     audienceLabel: 'Для кого',
     warrantyLabel: 'Гарантия',
     warrantyTitle: 'Политика гарантии и качества',
+    warrantyScope: 'Гарантия распространяется только на категории S+ и S1.',
     warrantyGuaranteed: 'Гарантированные проверки',
     warrantyCamera: 'Камера и линзы',
     warrantyMic: 'Микрофон и динамик',

@@ -154,6 +154,7 @@ export default {
     audienceLabel: 'For whom',
     warrantyLabel: 'Warranty',
     warrantyTitle: 'Warranty & Quality Policy',
+    warrantyScope: 'The warranty applies only to the S+ and S1 categories.',
     warrantyGuaranteed: 'Guaranteed checks',
     warrantyCamera: 'Camera and lenses',
     warrantyMic: 'Microphone and speaker',
