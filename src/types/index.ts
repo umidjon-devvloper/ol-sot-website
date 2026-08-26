@@ -99,6 +99,7 @@ export interface WholesaleOffer {
   condition: string;
   variant: string;
   priceUSD: number;
+  extraUSD?: number;
 }
 
 export interface WholesaleProduct {

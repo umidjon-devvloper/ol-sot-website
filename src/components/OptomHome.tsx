@@ -240,7 +240,7 @@ function DetailModal({
   const [idx, setIdx] = useState(0);
   const [qty, setQty] = useState(1);
   const offer: WholesaleOffer | undefined = offers[idx];
-  const cost = computeCost(offer?.priceUSD || 0, settings);
+  const cost = computeCost(offer?.priceUSD || 0, settings, offer?.extraUSD);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -291,10 +291,16 @@ function DetailModal({
           <p className="font-black mb-1">Taxminiy yakuniy xarajat</p>
           <p className="text-xs text-ink-muted mb-3">Bojxona + IMEI + Yo'l kira</p>
           <Row label="Qurilma narxi" value={`$${formatSom(cost.device)}`} />
-          <Row label="Bojxona xarajati" value={`$${formatSom(cost.customs)}`} />
-          <Row label="IMEI xarajati" value={`$${formatSom(cost.imei)}`} />
-          <Row label="Yo'l kira (kargo)" value={`$${formatSom(cost.cargo)}`} />
-          <Row label="Jami xarajatlar" value={`$${formatSom(cost.extra)}`} danger />
+          {cost.combined ? (
+            <Row label="Rastamojka + IMEI + kargo" value={`$${formatSom(cost.extra)}`} danger />
+          ) : (
+            <>
+              <Row label="Bojxona xarajati" value={`$${formatSom(cost.customs)}`} />
+              <Row label="IMEI xarajati" value={`$${formatSom(cost.imei)}`} />
+              <Row label="Yo'l kira (kargo)" value={`$${formatSom(cost.cargo)}`} />
+              <Row label="Jami xarajatlar" value={`$${formatSom(cost.extra)}`} danger />
+            </>
+          )}
           <div className="border-t border-zinc-200 dark:border-zinc-800 my-2" />
           <div className="flex items-center justify-between">
             <span className="font-bold text-lg">Jami to'lov</span>

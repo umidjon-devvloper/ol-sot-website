@@ -27,6 +27,7 @@ export interface CostBreakdown {
   extra: number;
   totalUSD: number;
   totalUZS: number;
+  combined: boolean;
 }
 
 const DEFAULT_SETTINGS: WholesaleSettings = {
@@ -39,17 +40,27 @@ const DEFAULT_SETTINGS: WholesaleSettings = {
 
 export const computeCost = (
   priceUSD: number,
-  settings?: WholesaleSettings | null
+  settings?: WholesaleSettings | null,
+  extraOverride?: number | null
 ): CostBreakdown => {
   const s = settings || DEFAULT_SETTINGS;
   const device = priceUSD || 0;
-  const customs = (device * (s.customsPercent || 0)) / 100;
-  const imei = s.imeiUSD || 0;
-  const cargo = s.cargoUSD || 0;
-  const extra = customs + imei + cargo;
+  const combined = extraOverride != null && extraOverride > 0;
+  let customs = 0;
+  let imei = 0;
+  let cargo = 0;
+  let extra: number;
+  if (combined) {
+    extra = extraOverride as number;
+  } else {
+    customs = (device * (s.customsPercent || 0)) / 100;
+    imei = s.imeiUSD || 0;
+    cargo = s.cargoUSD || 0;
+    extra = customs + imei + cargo;
+  }
   const totalUSD = device + extra;
   const totalUZS = totalUSD * (s.usdToUzs || 0);
-  return { device, customs, imei, cargo, extra, totalUSD, totalUZS };
+  return { device, customs, imei, cargo, extra, totalUSD, totalUZS, combined };
 };
 
 export const formatSom = (n: number): string =>
