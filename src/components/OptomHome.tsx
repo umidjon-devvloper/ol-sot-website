@@ -169,7 +169,7 @@ export function OptomHome() {
       {cartCount > 0 && (
         <button
           onClick={() => setCartOpen(true)}
-          className="fixed bottom-6 right-6 z-40 btn-primary btn-lg shadow-2xl rounded-full"
+          className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 btn-primary btn-lg shadow-2xl rounded-full"
         >
           <ShoppingCart className="w-5 h-5" /> Savat
           <span className="ml-1 min-w-6 h-6 px-1.5 rounded-full bg-white text-brand-600 text-xs font-black flex items-center justify-center">{cartCount}</span>
@@ -243,7 +243,7 @@ function DetailModal({
   const cost = computeCost(offer?.priceUSD || 0, settings, offer?.extraUSD);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={onClose} />
       <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#1C1C24] shadow-2xl p-6">
         <div className="flex items-start justify-between mb-4">
@@ -394,7 +394,7 @@ function CartDrawer({ onClose, minOrder }: { onClose: () => void; minOrder: numb
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-[60] flex justify-end">
       <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={onClose} />
       <div className="relative w-full max-w-md h-full overflow-y-auto bg-white dark:bg-[#13131A] shadow-2xl p-6">
         <div className="flex items-center justify-between mb-5">
