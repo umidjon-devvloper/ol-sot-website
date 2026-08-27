@@ -8,10 +8,13 @@ type Language = 'uz' | 'ru' | 'en';
 interface UIState {
   theme: Theme;
   language: Language;
+  cartOpen: boolean;
 
   initialize: () => void;
   toggleTheme: () => void;
   setLanguage: (lang: Language) => void;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 const applyTheme = (theme: Theme) => {
@@ -26,6 +29,7 @@ const applyTheme = (theme: Theme) => {
 export const useUIStore = create<UIState>((set, get) => ({
   theme: 'light',
   language: 'uz',
+  cartOpen: false,
 
   initialize: () => {
     if (typeof window === 'undefined') return;
@@ -55,4 +59,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     localStorage.setItem('language', lang);
     set({ language: lang });
   },
+
+  openCart: () => set({ cartOpen: true }),
+  closeCart: () => set({ cartOpen: false }),
 }));

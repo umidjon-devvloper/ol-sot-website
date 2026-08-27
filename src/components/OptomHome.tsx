@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { wholesaleApi, wholesaleOrderApi } from '../services/marketplaceApi';
 import { useWholesaleCart } from '../store/wholesaleCartStore';
 import { useAuthStore } from '../store/authStore';
+import { useUIStore } from '../store/uiStore';
 import type { WholesaleProduct, WholesaleSettings, WholesaleOffer } from '../types';
 import { minPriceUSD, sortedOffers, computeCost, formatSom } from '../lib/wholesale';
 
@@ -20,7 +21,7 @@ export function OptomHome() {
   const [search, setSearch] = useState('');
   const [brand, setBrand] = useState<string | null>(null);
   const [selected, setSelected] = useState<WholesaleProduct | null>(null);
-  const [cartOpen, setCartOpen] = useState(false);
+  const openCart = useUIStore((s) => s.openCart);
 
   const cartItems = useWholesaleCart((s) => s.items);
   const setLine = useWholesaleCart((s) => s.setLine);
@@ -168,8 +169,8 @@ export function OptomHome() {
       {/* Floating savat tugmasi */}
       {cartCount > 0 && (
         <button
-          onClick={() => setCartOpen(true)}
-          className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 btn-primary btn-lg shadow-2xl rounded-full"
+          onClick={() => openCart()}
+          className="hidden lg:inline-flex fixed bottom-6 right-6 z-40 btn-primary btn-lg shadow-2xl rounded-full"
         >
           <ShoppingCart className="w-5 h-5" /> Savat
           <span className="ml-1 min-w-6 h-6 px-1.5 rounded-full bg-white text-brand-600 text-xs font-black flex items-center justify-center">{cartCount}</span>
@@ -190,12 +191,9 @@ export function OptomHome() {
               quantity: qty,
             });
             setSelected(null);
-            setCartOpen(true);
           }}
         />
       )}
-
-      {cartOpen && <CartDrawer onClose={() => setCartOpen(false)} minOrder={settings?.minOrderQty ?? 1} />}
     </>
   );
 }
@@ -332,7 +330,7 @@ function Row({ label, value, danger }: { label: string; value: string; danger?: 
   );
 }
 
-function CartDrawer({ onClose, minOrder }: { onClose: () => void; minOrder: number }) {
+export function CartDrawer({ onClose, minOrder }: { onClose: () => void; minOrder: number }) {
   const router = useRouter();
   const items = useWholesaleCart((s) => s.items);
   const setQuantity = useWholesaleCart((s) => s.setQuantity);

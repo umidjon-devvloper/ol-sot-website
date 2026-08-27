@@ -16,6 +16,7 @@ export default {
     categories: 'Категории',
     grades: 'Грейды',
     aiShort: 'AI',
+    cart: 'Корзина',
     favorites: 'Избранное',
     ai: 'AI Помощник',
     profile: 'Профиль',

@@ -6,6 +6,7 @@ import { Providers } from '../components/Providers';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { BottomNav } from '../components/layout/BottomNav';
+import { CartHost } from '../components/cart/CartHost';
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -61,6 +62,7 @@ export default function RootLayout({
             <main className="flex-1 pb-16 lg:pb-0">{children}</main>
             <Footer />
             <BottomNav />
+            <CartHost />
           </div>
         </Providers>
       </body>

@@ -16,6 +16,7 @@ export default {
     categories: 'Categories',
     grades: 'Grades',
     aiShort: 'AI',
+    cart: 'Cart',
     favorites: 'Favorites',
     ai: 'AI Assistant',
     profile: 'Profile',

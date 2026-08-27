@@ -16,6 +16,7 @@ export default {
     categories: 'Kategoriyalar',
     grades: 'Darajalar',
     aiShort: 'AI',
+    cart: 'Savat',
     favorites: 'Sevimlilar',
     ai: 'AI Yordamchi',
     profile: 'Profil',
