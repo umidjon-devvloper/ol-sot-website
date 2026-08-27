@@ -14,6 +14,8 @@ export default {
   nav: {
     home: 'Asosiy',
     categories: 'Kategoriyalar',
+    grades: 'Darajalar',
+    aiShort: 'AI',
     favorites: 'Sevimlilar',
     ai: 'AI Yordamchi',
     profile: 'Profil',

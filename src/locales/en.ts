@@ -14,6 +14,8 @@ export default {
   nav: {
     home: 'Home',
     categories: 'Categories',
+    grades: 'Grades',
+    aiShort: 'AI',
     favorites: 'Favorites',
     ai: 'AI Assistant',
     profile: 'Profile',

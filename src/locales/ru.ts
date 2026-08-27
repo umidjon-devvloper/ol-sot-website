@@ -14,6 +14,8 @@ export default {
   nav: {
     home: 'Главная',
     categories: 'Категории',
+    grades: 'Грейды',
+    aiShort: 'AI',
     favorites: 'Избранное',
     ai: 'AI Помощник',
     profile: 'Профиль',
