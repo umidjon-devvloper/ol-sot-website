@@ -16,14 +16,11 @@ import { useT } from "@/hooks/useT";
  * User keyinroq aniq raqamlarni beradi.
  */
 const GRADE_FEES: Record<string, string> = {
-  s_plus: "5%",
-  s1: "4%",
-  cpo: "3%",
-  as_is: "2%",
+  s_plus: "$0",
+  s1: "$0",
+  cpo: "$3",
+  as_is: "$2",
 };
-
-const DELIVERY_CITY_FEE = "20 000";
-const DELIVERY_REGION_FEE = "50 000";
 
 export default function ServiceFeesContent() {
   const { t } = useT();
@@ -78,20 +75,16 @@ export default function ServiceFeesContent() {
           title={t("serviceFees.deliveryTitle")}
         >
           <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
-            <li className="flex items-center justify-between py-3.5">
+            <li className="flex items-center gap-2 py-3.5">
+              <Truck size={16} className="text-brand-500 shrink-0" />
               <span className="text-ink dark:text-ink-dark font-medium">
                 {t("serviceFees.deliveryCity")}
               </span>
-              <span className="text-lg font-bold text-brand-500 tabular-nums">
-                {DELIVERY_CITY_FEE} {t("common.sum")}
-              </span>
             </li>
-            <li className="flex items-center justify-between py-3.5">
+            <li className="flex items-center gap-2 py-3.5">
+              <Truck size={16} className="text-brand-500 shrink-0" />
               <span className="text-ink dark:text-ink-dark font-medium">
                 {t("serviceFees.deliveryRegion")}
-              </span>
-              <span className="text-lg font-bold text-brand-500 tabular-nums">
-                {DELIVERY_REGION_FEE} {t("common.sum")}
               </span>
             </li>
           </ul>
@@ -128,16 +121,12 @@ export default function ServiceFeesContent() {
         >
           <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
             <PaymentRow
+              icon={<CreditCard className="text-blue-500" size={18} />}
+              label={t("serviceFees.paymentTransfer")}
+            />
+            <PaymentRow
               icon={<Banknote className="text-emerald-500" size={18} />}
               label={t("serviceFees.paymentCash")}
-            />
-            <PaymentRow
-              icon={<CreditCard className="text-blue-500" size={18} />}
-              label={t("serviceFees.paymentCard")}
-            />
-            <PaymentRow
-              icon={<Clock className="text-amber-500" size={18} />}
-              label={t("serviceFees.paymentInstallment")}
             />
           </ul>
         </SectionCard>
